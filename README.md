@@ -1,5 +1,6 @@
-# Getting Started with Create React App
+# Depop Dash
 
+An advanced insights dashboard for Depop sellers.
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
