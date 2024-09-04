@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'GT America Extended';
+  src: url('../public/GTAmerica-ExtendedMedium.woff2') format('woff2'),
+       url('../public/GTAmerica-ExtendedMedium.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
