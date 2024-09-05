@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage.tsx';
 import AppTheme from './AppTheme.ts';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
-import Photos from './pages/Photos.tsx';
+import Upload from './pages/Upload.tsx';
 
 const App: React.FC = () => {
   return (
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Route path="*" element={<Navigate to="/home" />} />
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
-            <Route path="/photos" element={<Photos />} />
+            <Route path="/photos" element={<Upload />} />
           </Routes>
         </Box>
         <Footer />
