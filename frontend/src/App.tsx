@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles'
 import { Box } from '@mui/material';
-import HomePage from './pages/HomePage.tsx';
+import Home from './pages/home/Home.tsx';
 import AppTheme from './AppTheme.ts';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
@@ -13,28 +13,17 @@ const App: React.FC = () => {
     <ThemeProvider theme={AppTheme}>
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh',
-          width: '100%',
-          overflowX: 'hidden',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+          height: '100vh',
+          width: '100vw',
         }}
       >
         <Header />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          <Routes>
+        <Routes>
             <Route path="*" element={<Navigate to="/home" />} />
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/photos" element={<Upload />} />
-          </Routes>
-        </Box>
+            <Route path="/home" element={<Home />} />
+            <Route path="/upload" element={<Upload />} />
+        </Routes>
         <Footer />
       </Box>
     </ThemeProvider>

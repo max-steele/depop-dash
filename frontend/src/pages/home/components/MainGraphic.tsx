@@ -2,8 +2,7 @@ import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-
-const Upload: React.FC = () => {
+const MainGraphic: React.FC = () => {
     const navigate = useNavigate();
 
     const doButtonClick = () => {
@@ -12,16 +11,16 @@ const Upload: React.FC = () => {
 
     return (
       <>
-        <Box
+         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             height: '650px',
-            width: '1600px',
+            width: '100%',
+            maxWidth: '1600px',
             margin: '0 auto',
-            border: '2px solid blue'
           }}
         >
           <Box
@@ -94,4 +93,4 @@ const Upload: React.FC = () => {
     );
 }
 
-export default Upload;
+export default MainGraphic;

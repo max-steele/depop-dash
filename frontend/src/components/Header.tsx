@@ -12,7 +12,7 @@ const navItems = [
   },
   {
     label: 'Upload',
-    path: '/photos',
+    path: '/upload',
   },
 ];
 
@@ -25,18 +25,20 @@ export const Header: React.FC = () => {
       sx={{
         borderBottom: 1, 
         borderBottomColor: 'rgba(0, 0, 0, 0.12)',
-        margin: '0',
+        width: '100%',
+        margin: '0 auto',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingX: 1,
+        paddingX: "50px",
+        boxSizing: 'border-box',
       }}
     >
       <Box
         sx={{
-          width: '1800px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          maxWidth: '1600px',
           margin: '0 auto',
         }}
       >
