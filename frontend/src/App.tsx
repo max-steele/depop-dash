@@ -6,8 +6,6 @@ import HomePage from './pages/HomePage.tsx';
 import AppTheme from './AppTheme.ts';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
-import Engagement from './pages/Engagement.tsx';
-import Prices from './pages/Prices.tsx';
 import Photos from './pages/Photos.tsx';
 
 const App: React.FC = () => {
@@ -17,7 +15,9 @@ const App: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          margin: '0 auto',
           minHeight: '100vh',
+          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         }}
       >
         <Header />
@@ -32,8 +32,6 @@ const App: React.FC = () => {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/photos" element={<Photos />} />
-            <Route path="/prices" element={<Prices />} />
-            <Route path="/engagement" element={<Engagement />} />
           </Routes>
         </Box>
         <Footer />

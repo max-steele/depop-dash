@@ -11,16 +11,8 @@ const navItems = [
     path: '/home',
   },
   {
-    label: 'Refine Photos',
+    label: 'Upload',
     path: '/photos',
-  },
-  {
-    label: 'Price Tracking',
-    path: '/prices',
-  },
-  {
-    label: 'Engagement',
-    path: '/engagement',
   },
 ];
 
@@ -30,18 +22,22 @@ export const Header: React.FC = () => {
   return (
     <Box
       component={'nav'}
-      sx={{ 
+      sx={{
         borderBottom: 1, 
         borderBottomColor: 'rgba(0, 0, 0, 0.12)',
         margin: '0',
         alignItems: 'center',
-        paddingX: 1, 
+        justifyContent: 'center',
+        paddingX: 1,
       }}
     >
       <Box
         sx={{
+          width: '1800px',
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
+          margin: '0 auto',
         }}
       >
         <Box

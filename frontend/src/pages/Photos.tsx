@@ -1,16 +1,16 @@
 import { Box, Typography, Button } from '@mui/material';
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Cloudinary } from '@cloudinary/url-gen';
-import { AdvancedImage } from '@cloudinary/react';
-import { fill } from '@cloudinary/url-gen/actions/resize';
+//import { Cloudinary } from '@cloudinary/url-gen';
+//import { AdvancedImage } from '@cloudinary/react';
+//import { fill } from '@cloudinary/url-gen/actions/resize';
 
 // Initialize Cloudinary instance
-const cld = new Cloudinary({
-  cloud: {
-    cloudName: 'YOUR_CLOUD_NAME', // Replace with your Cloudinary cloud name
-  },
-});
+//const cld = new Cloudinary({
+  //cloud: {
+   // cloudName: 'YOUR_CLOUD_NAME', // Replace with your Cloudinary cloud name
+  //},
+//});
 
 const Photos: React.FC = () => {
   // Handle file upload
@@ -85,24 +85,6 @@ const Photos: React.FC = () => {
             <Typography>Drag & drop some files here, or click to select files</Typography>
           )}
         </Box>
-
-        {/* Placeholder for edited images */}
-        <Box
-          sx={{
-            mt: 3,
-            display: 'flex',
-            gap: 2,
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}
-        >
-          {/* Example of displaying an uploaded image using Cloudinary */}
-          {/* Replace 'sample' with the actual public ID from the upload response */}
-          <AdvancedImage
-            cldImg={cld.image('sample').resize(fill().width(200).height(200))}
-          />
-        </Box>
-
         <Button
           variant="contained"
           sx={{

@@ -3,10 +3,10 @@ import { createTheme } from '@mui/material';
 const AppTheme = createTheme({
   palette: {
     primary: {
-      main: '#FF0000', // Red
+      main: '#FF2300', // Red
     },
     secondary: {
-      main: '#808080', // Grey
+      main: '#141414', // Grey
     },
     background: {
       default: '#F5F5F5', // Light
@@ -14,7 +14,7 @@ const AppTheme = createTheme({
     },
     text: {
       primary: '#000000', // Black text
-      secondary: '#808080', // Grey text 
+      secondary: '#141414', // Grey text
     },
   },
   typography: {
