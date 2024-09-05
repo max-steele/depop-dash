@@ -15,8 +15,9 @@ const App: React.FC = () => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          margin: '0 auto',
           minHeight: '100vh',
+          width: '100%',
+          overflowX: 'hidden',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
         }}
       >

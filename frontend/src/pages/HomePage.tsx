@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
       <>
         <Box
           sx={{
-            height: '120px',
+            height: '140px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -27,7 +27,15 @@ const HomePage: React.FC = () => {
             backdropFilter: 'blur(10px)',
           }}
         >
-          <Typography variant="h6" fontSize={"24px"} color='white'>
+          <Typography
+            variant="h6"
+            fontSize="24px"
+            fontWeight="bold"
+            color="white"
+            sx={{
+              textShadow: '4px 4px 9px rgba(0, 0, 0, 0.7)',
+            }}
+          >
             Welcome to depop<i>Dash</i>.
           </Typography>
         </Box>
@@ -64,24 +72,26 @@ const HomePage: React.FC = () => {
               Effortlessly refine your Depop listings to boost sales & engagement. Developed by a Depop Top Seller.
             </Typography>
             <Button
-              variant="contained"
-              sx={{
-                paddingX: 2,
-                paddingY: 1,
-                width: '15%',
-                backgroundColor: 'primary',
-                color: 'black',
-                ':hover': {
-                  backgroundColor: '#ff4040',
-                },
-                mt: 3
-              }}
-              onClick={doButtonClick}
-            >
-              <Typography variant="h6" fontSize="16px" color="white">
-                Try it now
-              </Typography>
-            </Button>
+            variant="contained"
+            sx={{
+              paddingY: 1.5,
+              width: '10%',
+              backgroundColor: 'primary',
+              color: 'white',
+              border: '2px solid transparent',
+              ':hover': {
+                backgroundColor: 'white',
+                color: '#ff4040',
+                borderColor: '#ff4040',
+              },
+              mt: 3,
+            }}
+            onClick={doButtonClick}
+          >
+            <Typography variant="h6" fontSize="16px" color="inherit">
+              Try it
+            </Typography>
+          </Button>
           </Box>
           <Box
             sx={{
@@ -107,68 +117,110 @@ const HomePage: React.FC = () => {
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            textAlign: 'center',
+            backgroundColor: '#ededed',
             width: '100%',
-            height: '100%',
-            padding: '0 50px 0 50px',
-            gap: 3,
           }}
         >
-          <Box>
-            <Typography variant="h6" fontSize="40px" color="text.secondary">
-              <b>How it works.</b>
-            </Typography>
-          </Box>
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: 'column',
               justifyContent: 'center',
-              gap: 25,
-              mt: 10,
+              textAlign: 'center',
+              width: '1800px',
+              height: '100%',
+              margin: '0 auto',
+              paddingTop: '150px',
+              paddingRight: '25px',
+              paddingBottom: '150px',
+              paddingLeft: '25px',
+              gap: 3,
             }}
           >
             <Box>
-              <Box
-                sx={{
-                  color: 'primary.main',
-                  mb: 2,
-                }}
-              >
-                <DriveFolderUploadIcon fontSize={'large'} />
-              </Box>
-              <Typography variant="h6" fontSize="30px" color="text.secondary">
-                <b>Upload your images.</b>
+              <Typography variant="h6" fontSize="40px" color="text.secondary">
+                <b>How it works.</b>
               </Typography>
             </Box>
-            <Box>
-              <Box
-                sx={{
-                  color: 'primary.main',
-                  mb: 2,
-                }}
-              >
-                <AutoFixHighIcon fontSize={'large'} />
-              </Box>
-              <Typography variant="h6" fontSize="30px" color="text.secondary">
-                <b>Leverage AI-generated & custom photo filters.</b>
-              </Typography>
-            </Box>
-            <Box>
             <Box
-                sx={{
-                  color: 'primary.main',
-                  mb: 2,
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                gap: 15,
+                mt: 10,
+              }}
+            >
+              <Box
+                sx={{ 
+                  width: '33%',
                 }}
               >
-                <ChecklistIcon fontSize={'large'} />
+                <Box
+                  sx={{
+                    color: 'primary.main',
+                    mb: 2,
+                  }}
+                >
+                  <DriveFolderUploadIcon fontSize={'large'} />
+                </Box>
+                <Typography variant="h6" fontSize="30px" color="text.secondary" mb='2rem' >
+                  <b>Upload your images.</b>
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary" mb='2rem' >
+                  Upload your own images directly from your device. Our easy-to-use user interface allows you to 
+                  quickly sort your photos into listings.
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary">
+                  Easily manage and track your listings with confidence. Visit the Upload tab to get started!
+                </Typography>
               </Box>
-              <Typography variant="h6" fontSize="30px" color="text.secondary">
-                <b>Let us handle the rest!</b>
-              </Typography>
+              <Box
+                sx={{ 
+                  width: '33%', 
+                }}
+              >
+                <Box
+                  sx={{
+                    color: 'primary.main',
+                    mb: 2,
+                  }}
+                >
+                  <AutoFixHighIcon fontSize={'large'} />
+                </Box>
+                <Typography variant="h6" fontSize="30px" color="text.secondary" mb='2rem' >
+                  <b>Leverage AI-generated & custom photo filters.</b>
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary" mb='2rem' >
+                  Powered by Cloudinary, depop<i>Dash</i> uses AI to help you enhance your photos.
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary">
+                  Choose from built-in filters, or create your own using the powerful GPT API.
+                </Typography>
+              </Box>
+              <Box
+                sx={{ 
+                  width: '33%', 
+                }}
+              >
+                <Box
+                  sx={{
+                    color: 'primary.main',
+                    mb: 2,
+                  }}
+                >
+                  <ChecklistIcon fontSize={'large'} />
+                </Box>
+                <Typography variant="h6" fontSize="30px" color="text.secondary" mb='2rem' >
+                  <b>Let us handle the rest!</b>
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary" mb='2rem' >
+                  We want to make it easy for you. Sit back while we process your images.
+                </Typography>
+                <Typography variant="h6" fontSize="17px" color="text.secondary">
+                  Don't like what you're seeing? Try a different filter or retry our enhancements at any time.
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Box>
