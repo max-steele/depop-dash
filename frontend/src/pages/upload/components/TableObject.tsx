@@ -23,23 +23,35 @@ const TableObject: React.FC = () => {
           display: 'flex',
           margin: '0 auto',
           maxWidth: '1600px',
-          height: '100%'
         }}
       >
-        <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-          <Table>
+        <TableContainer 
+          component={Paper} 
+          sx={{ marginTop: 4 }}
+        >
+          <Table
+            sx={{
+              border: '1px solid rgba(0, 0, 0, 0.12)'
+            }}
+          >
             <TableHead>
-              <TableRow>
+              <TableRow
+                sx={{
+                  '& > *': {
+                    borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+                  }, 
+                }}
+              >
                 <TableCell>
                   <input
                     type="checkbox"
                     checked={rows.every((row) => row.isSelected) && rows.length > 0}
                     onChange={handleSelectAll}
                   />
-                  Select
                 </TableCell>
                 <TableCell>Listing Title</TableCell>
                 <TableCell>Images</TableCell>
+                <TableCell>Filter</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

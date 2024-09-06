@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { TableRow as MuiTableRow, TableCell, Box, IconButton, Button, TextField } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { TableRow as MuiTableRow, TableCell, Box, IconButton, Button, TextField, Select, MenuItem, SelectChangeEvent, FormControl } from '@mui/material';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { RowItem } from './utils.tsx';
+import { RowItem, FILTERS } from './utils.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
 
 interface TableRowProps {
@@ -14,11 +14,16 @@ interface TableRowProps {
 
 const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
   const [editName, setEditName] = useState<boolean>(false);
-  const [activeNewName, setActiveNewName] = useState<string>(row.title);
+  const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
+  const [selectedFilter, setSelectedFilter] = useState<string>(row.filter);
 
   const {
     saveRows
   } = useUploadContext();
+
+  useEffect(() => {
+    setSelectedFilter(row.filter);
+  }, [row.filter]);
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,26 +41,47 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
   const handleChangeNameClick = () => {
     saveRows((prevRows) =>
       prevRows.map((curRow) =>
-        curRow.title === row.title ? { ...row, title: activeNewName } : row
+        curRow.title === row.title ? { ...row, title: activeNewTitle } : row
       )
     );
     setEditName(false);
+  };
+
+  const handleFilterChange = (event: SelectChangeEvent<string>, child: ReactNode) => {
+    const newFilter = event?.target.value as string;
+    setSelectedFilter(newFilter);
+    saveRows((prevRows) =>
+      prevRows.map((curRow) =>
+        curRow === row ? { ...row, filter: newFilter } : curRow
+      )
+    );
   }
 
   return (
     <MuiTableRow
       sx={{
         backgroundColor: row.isSelected ? 'lightgrey' : 'inherit',
+        '& > *': { // Applies styles to each cell
+          borderRight: '1px solid rgba(0, 0, 0, 0.12)', // Vertical line
+        },
       }}
     >
-      <TableCell>
+      <TableCell
+        sx={{
+          width: '2%'
+        }}
+      >
         <input
           type="checkbox"
           checked={row.isSelected}
           onClick={handleCheckboxClick}
         />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          width: '15%'
+        }}
+      >
         {!editName ? (
             <Box
               sx={{ display: 'flex' }}
@@ -104,9 +130,9 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
                 <CheckIcon fontSize="small" />
               </Button>
               <TextField
-                value={activeNewName}
+                value={activeNewTitle}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setActiveNewName(event.target.value);
+                  setActiveNewTitle(event.target.value);
                 }}
                 sx={{
                   height: '25px',
@@ -127,7 +153,11 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
             </Box>
           )}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          width: '50%'
+        }}
+      >
         <Box sx={{ display: 'flex', gap: 1 }}>
           {[...Array(8)].map((_, imgIndex) => (
             <IconButton
@@ -141,10 +171,40 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
                 alignItems: 'center',
               }}
             >
-              <AddIcon fontSize="small" />
+              <AddAPhotoIcon fontSize="small" />
             </IconButton>
           ))}
         </Box>
+      </TableCell>
+      <TableCell
+        sx={{
+          width: '20%'
+        }}
+      >
+        <FormControl fullWidth>
+          <Select
+            value={selectedFilter}
+            onChange={handleFilterChange}
+            sx={{
+              minWidth: 120,
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'rgba(0, 0, 0, 0.23)', // Match other input borders
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'secondary.main', // Highlight color on hover
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'secondary.main', // Focus color
+              },
+            }}
+          >
+            {FILTERS.map((filter) => (
+              <MenuItem key={filter.id} value={filter.id}>
+                {filter.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </TableCell>
     </MuiTableRow>
   );
