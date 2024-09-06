@@ -11,7 +11,7 @@ const MainGraphic: React.FC = () => {
 
     return (
       <>
-         <Box
+        <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
@@ -28,12 +28,20 @@ const MainGraphic: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
+            }}
+          >
+
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
               textAlign: 'left',
               width: '50%',
               height: '100%',
               padding: '0 50px 0 50px',
               gap: 3,
-              border: '2px solid red'
             }}
           >
             <Typography variant="h6" fontSize="40px" color="text.secondary">
@@ -74,7 +82,6 @@ const MainGraphic: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2px solid orange'
             }}
           >
             <img

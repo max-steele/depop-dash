@@ -6,7 +6,7 @@ import Home from './pages/home/Home.tsx';
 import AppTheme from './AppTheme.ts';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
-import Upload from './pages/Upload.tsx';
+import Upload from './pages/upload/Upload.tsx';
 
 const App: React.FC = () => {
   return (

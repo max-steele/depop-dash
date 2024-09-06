@@ -11,7 +11,6 @@ const AppInfo: React.FC = () => {
         <Box
           sx={{
             backgroundColor: '#ededed',
-            border: '2px solid pink'
           }}
         >
           <Box
