@@ -46,7 +46,11 @@ const Upload: React.FC = () => {
 
   const areRowsSelected = (): boolean => {
     return rows.some(row => row.isSelected);
-  }
+  };
+
+  const processDisabled = (): boolean => {
+    return rows.length === 0 || areRowsSelected() || rows.some(row => !row.filter);
+  };
 
   return (
     <>
@@ -252,7 +256,8 @@ const Upload: React.FC = () => {
                     },
                     mt: 3,
                   }}
-                  disabled={rows.length === 0 || areRowsSelected()}
+                  disabled={processDisabled()}
+                  //disabled={rows.length === 0 || areRowsSelected()}
                 >
                   <SendIcon />
                   <Typography variant="h6" fontSize="16px" color="inherit">
