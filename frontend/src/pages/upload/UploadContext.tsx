@@ -4,6 +4,10 @@ import { INITIAL_LISTINGS, RowItem } from './components/utils.tsx';
 interface UploadContextProps {
   rows: RowItem[];
   saveRows: (data: RowItem[] | ((prevRows: RowItem[]) => RowItem[])) => void;
+  error: string;
+  saveError: (data: string) => void;
+  editName: number | null;
+  saveEditName: (data: number | null) => void;
   resetOptions: () => void;
 };
 
@@ -22,6 +26,8 @@ const useUploadContext = (): UploadContextProps => {
 
 const UploadContextProvider = ({ children }: any) => {
   const [rows, setRows] = useState<RowItem[]>(INITIAL_LISTINGS);
+  const [error, setError] = useState<string>('');
+  const [editName, setEditName] = useState<number | null>(null);
 
   const saveRows = (updater: RowItem[] | ((prevRows: RowItem[]) => RowItem[])) => {
     if (typeof updater === 'function') {
@@ -31,13 +37,27 @@ const UploadContextProvider = ({ children }: any) => {
     }
   };
 
+  const saveError = (data: string) => {
+    setError(data);
+  };
+
+  const saveEditName = (data: number | null) => {
+    setEditName(data);
+  };
+
   const resetOptions = (): void => {
     setRows(INITIAL_LISTINGS);
-  }
+    setError('');
+    setEditName(null);
+  };
 
   const value: UploadContextProps = {
     rows,
     saveRows,
+    error,
+    saveError,
+    editName,
+    saveEditName,
     resetOptions,
   };
 

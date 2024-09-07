@@ -3,7 +3,7 @@ import { TableRow as MuiTableRow, TableCell, Box, IconButton, Button, TextField,
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { RowItem, FILTERS } from './utils.tsx';
+import { RowItem, FILTERS, isTitleUnique } from './utils.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
 
 interface TableRowProps {
@@ -13,12 +13,14 @@ interface TableRowProps {
 }
 
 const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
-  const [editName, setEditName] = useState<boolean>(false);
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
   const [selectedFilter, setSelectedFilter] = useState<string>(row.filter);
 
   const {
-    saveRows
+    saveRows,
+    saveError,
+    editName,
+    saveEditName,
   } = useUploadContext();
 
   useEffect(() => {
@@ -35,16 +37,30 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
   };
 
   const handleEditTitleClick = () => {
-    setEditName(true);
-  }
+    saveEditName(index);
+  };
 
   const handleChangeNameClick = () => {
-    saveRows((prevRows) =>
-      prevRows.map((curRow) =>
-        curRow.title === row.title ? { ...row, title: activeNewTitle } : row
-      )
-    );
-    setEditName(false);
+    if (activeNewTitle.length === 0) {
+      saveError("Listing title cannot be empty.");
+    } else {
+      saveRows((prevRows) => {
+        // Check if another row already has the same title
+        if (!isTitleUnique(activeNewTitle, prevRows, index)) {
+          saveError("Another listing already has this title.");
+          return prevRows;
+        }
+    
+        // Update the row's title if unique
+        const updatedRows = prevRows.map((curRow, rowIndex) =>
+          rowIndex === index ? { ...curRow, title: activeNewTitle } : curRow
+        );
+    
+        saveError('');
+        saveEditName(null);
+        return updatedRows;
+      });
+    }
   };
 
   const handleFilterChange = (event: SelectChangeEvent<string>, child: ReactNode) => {
@@ -61,8 +77,8 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
     <MuiTableRow
       sx={{
         backgroundColor: row.isSelected ? 'lightgrey' : 'inherit',
-        '& > *': { // Applies styles to each cell
-          borderRight: '1px solid rgba(0, 0, 0, 0.12)', // Vertical line
+        '& > *': {
+          borderRight: '1px solid rgba(0, 0, 0, 0.12)',
         },
       }}
     >
@@ -82,7 +98,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
           width: '15%'
         }}
       >
-        {!editName ? (
+        {editName !== index ? (
             <Box
               sx={{ display: 'flex' }}
             >

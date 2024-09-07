@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import TableRowItem from './TableRowItem.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
 
@@ -7,6 +7,7 @@ const TableObject: React.FC = () => {
   const {
     rows,
     saveRows,
+    error
   } = useUploadContext();
 
   const handleSelectAll = () => {
@@ -18,13 +19,28 @@ const TableObject: React.FC = () => {
 
   return (
     <>
+
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
           margin: '0 auto',
           maxWidth: '1600px',
         }}
       >
+        {error ? (
+          <Typography 
+            variant="h6" 
+            fontSize="17px" 
+            color="primary.main"
+            sx={{
+              mt: 1,
+              mb: -3
+            }}
+          >
+            {error}
+          </Typography>
+        ) : <></>}
         <TableContainer 
           component={Paper} 
           sx={{ marginTop: 4 }}

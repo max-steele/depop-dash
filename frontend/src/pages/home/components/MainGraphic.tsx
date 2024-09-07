@@ -84,16 +84,21 @@ const MainGraphic: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            <img
-                src='/images/depop_products.webp'
-                alt='Depop Logo'
-                style={{
-                  width: '800px',
-                  height: '525px',
-                  borderRadius: '12px',
-                  objectFit: 'fill',
-                }}
-              />
+            <Box
+              component="img"
+              src="/images/depop_products.webp"
+              alt="Depop Logo"
+              sx={{
+                width: '800px',
+                height: '525px',
+                borderRadius: '12px',
+                objectFit: 'fill',
+                transition: 'transform 200ms',
+                '&:hover': {
+                  transform: 'scale(1.02)',
+                },
+              }}
+            />
           </Box>
         </Box>
       </>

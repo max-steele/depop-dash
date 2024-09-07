@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Box, Button, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -6,11 +6,15 @@ import SendIcon from '@mui/icons-material/Send';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeselectIcon from '@mui/icons-material/Deselect';
 import TableObject from './components/TableObject.tsx';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import { useUploadContext } from './UploadContext.tsx';
-import { calculateSelectedFilter, FILTERS, splitListing } from './components/utils.tsx';
+import { calculateSelectedFilter, FILTERS, isTitleUnique, RowItem } from './components/utils.tsx';
 
 
 const Upload: React.FC = () => {
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+  
   const {
     rows,
     saveRows,
@@ -21,8 +25,26 @@ const Upload: React.FC = () => {
     if (rows.length === 0) {
       saveRows([{ title: `Listing 1`, images: [], isSelected: false, filter: '' }])
     } else {
-      saveRows((prevRows) => [...prevRows, { title: `Listing ${splitListing(prevRows[prevRows.length - 1].title).number + 1}`, images: [], isSelected: false, filter: '' }]);
+      saveRows((prevRows) => [
+        ...prevRows, 
+        { 
+          title: findUniqueTitle(prevRows), 
+          images: [], 
+          isSelected: false, 
+          filter: '' 
+        }
+      ]);
     }
+  };
+
+  const findUniqueTitle = (prevRows: RowItem[]): string => {
+    let newTitleIndex = prevRows.length + 1;
+    let newTitle = `Listing ${newTitleIndex}`;
+    while (!isTitleUnique(newTitle, prevRows, -1)) {
+      newTitleIndex++;
+      newTitle = `Listing ${newTitleIndex}`
+    }
+    return newTitle;
   };
 
   const handleRemoveSelected = () => {
@@ -50,6 +72,23 @@ const Upload: React.FC = () => {
 
   const processDisabled = (): boolean => {
     return rows.length === 0 || areRowsSelected() || rows.some(row => !row.filter);
+  };
+
+  const handleResetClick = () => {
+    if (rows.some(row => row.filter)) {
+      setShowConfirmation(true);
+    } else {
+      resetOptions();
+    }
+  };
+
+  const handleConfirmReset = () => {
+    resetOptions();
+    setShowConfirmation(false);
+  };
+
+  const handleCancelReset = () => {
+    setShowConfirmation(false);
   };
 
   return (
@@ -82,7 +121,8 @@ const Upload: React.FC = () => {
 
       <Box
         sx={{
-          height: '100%'
+          height: '100%',
+          paddingX: '50px'
         }}
       >
         <Box
@@ -126,30 +166,75 @@ const Upload: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 2,
-                  mb: -3
+                  mb: -3,
                 }}
               >
-                <Button
-                  variant="text"
-                  sx={{
-                    color: 'lightgrey',
-                    border: 'none',
-                    ':hover': {
-                      color: 'grey',
-                    },
-                    mt: 3,
-                  }}
-                  onClick={resetOptions}
-                >
-                  <RestartAltIcon />
-                  <Typography variant="h6" fontSize="16px" color="inherit">
-                    &nbsp;Reset
-                  </Typography>
-                </Button>
+                {showConfirmation ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      transform: 'translateY(15px)'
+                    }}
+                  >
+                    <Typography variant="h6" fontSize="16px" color="inherit">
+                      Are you sure?
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: 'green',
+                        color: 'white',
+                        ':hover': {
+                          backgroundColor: 'darkgreen',
+                        },
+                      }}
+                      onClick={handleConfirmReset}
+                    >
+                      <CheckIcon />
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: 'red',
+                        color: 'white',
+                        ':hover': {
+                          backgroundColor: 'darkred',
+                        },
+                      }}
+                      onClick={handleCancelReset}
+                    >
+                      <CloseIcon />
+                    </Button>
+                  </Box>
+                ) : (
+                  <Button
+                    variant="text"
+                    sx={{
+                      color: '#808080',
+                      border: 'none',
+                      ':hover': {
+                        backgroundColor: 'white',
+                        color: '#a0a0a0',
+                      },
+                      mt: 3,
+                      transition: 'transform 0.3s',
+                    }}
+                    onClick={handleResetClick}
+                  >
+                    <RestartAltIcon />
+                    <Typography variant="h6" fontSize="16px" color="inherit">
+                      &nbsp;Reset
+                    </Typography>
+                  </Button>
+                )}
                 <Button
                   variant="contained"
                   sx={{
-                    paddingY: 1.5,
+                    paddingY: 1,
+                    paddingX: 1.5,
+                    fontSize: '14px',
                     backgroundColor: 'green',
                     color: 'white',
                     border: '2px solid transparent',
@@ -173,7 +258,9 @@ const Upload: React.FC = () => {
                     <Button
                       variant="contained"
                       sx={{
-                        paddingY: 1.5,
+                        paddingY: 1,
+                        paddingX: 1.5,
+                        fontSize: '14px',
                         backgroundColor: 'primary',
                         color: 'white',
                         border: '2px solid transparent',
@@ -194,7 +281,9 @@ const Upload: React.FC = () => {
                     <Button
                       variant="contained"
                       sx={{
-                        paddingY: 1.5,
+                        paddingY: 1,
+                        paddingX: 1.5,
+                        fontSize: '14px',
                         backgroundColor: '#0000FF',
                         color: 'white',
                         border: '2px solid transparent',
@@ -212,40 +301,14 @@ const Upload: React.FC = () => {
                         &nbsp;Deselect
                       </Typography>
                     </Button>
-                    <FormControl>
-                      <Select
-                        value={calculateSelectedFilter(rows)}
-                        onChange={handleFilterChange}
-                        sx={{
-                          minWidth: 120,
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'rgba(0, 0, 0, 0.23)', // Match other input borders
-                          },
-                          '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'secondary.main', // Highlight color on hover
-                          },
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'secondary.main', // Focus color
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'red', // Set the label color to secondary.main
-                          },
-                          mt: 3
-                        }}
-                      >
-                        {FILTERS.map((filter) => (
-                          <MenuItem key={filter.id} value={filter.id}>
-                            {filter.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
                   </>
                 ) : <></>}
                 <Button
                   variant="contained"
                   sx={{
-                    paddingY: 1.5,
+                    paddingY: 1,
+                    paddingX: 1.5,
+                    fontSize: '14px',
                     backgroundColor: 'secondary.main',
                     color: 'white',
                     border: '2px solid transparent',
@@ -257,13 +320,42 @@ const Upload: React.FC = () => {
                     mt: 3,
                   }}
                   disabled={processDisabled()}
-                  //disabled={rows.length === 0 || areRowsSelected()}
                 >
                   <SendIcon />
                   <Typography variant="h6" fontSize="16px" color="inherit">
                     &nbsp;Process Images
                   </Typography>
                 </Button>
+                {areRowsSelected() ? (
+                  <FormControl>
+                    <Select
+                      value={calculateSelectedFilter(rows)}
+                      onChange={handleFilterChange}
+                      sx={{
+                        minWidth: 120,
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'rgba(0, 0, 0, 0.23)', // Match other input borders
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'secondary.main', // Highlight color on hover
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: 'secondary.main', // Focus color
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'red', // Set the label color to secondary.main
+                        },
+                        mt: 3
+                      }}
+                    >
+                      {FILTERS.map((filter) => (
+                        <MenuItem key={filter.id} value={filter.id}>
+                          {filter.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                ) : <></>}
               </Box>
             </Box>
           </Box>
