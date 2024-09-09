@@ -1,6 +1,6 @@
 export type RowItem = {
   title: string;
-  images: any[]
+  files: (FileWithPreview | null)[]
   isSelected: boolean;
   filter: string;
 };
@@ -10,34 +10,38 @@ export type Filter = {
   name: string;
 }
 
+export interface FileWithPreview extends File {
+  preview: string;
+};
+
 export const INITIAL_LISTINGS: RowItem[] = [
   {
     title: 'Listing 1',
-    images: [],
+    files: Array(8).fill(null),
     isSelected: false,
     filter: ''
   },
   {
     title: 'Listing 2',
-    images: [],
+    files: Array(8).fill(null),
     isSelected: false,
     filter: ''
   },
   {
     title: 'Listing 3',
-    images: [],
+    files: Array(8).fill(null),
     isSelected: false,
     filter: ''
   },
   {
     title: 'Listing 4',
-    images: [],
+    files: Array(8).fill(null),
     isSelected: false,
     filter: ''
   },
   {
     title: 'Listing 5',
-    images: [],
+    files: Array(8).fill(null),
     isSelected: false,
     filter: ''
   },

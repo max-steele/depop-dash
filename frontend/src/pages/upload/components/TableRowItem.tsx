@@ -1,10 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { TableRow as MuiTableRow, TableCell, Box, IconButton, Button, TextField, Select, MenuItem, SelectChangeEvent, FormControl } from '@mui/material';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { TableRow as MuiTableRow, TableCell, Box, Button, TextField, Select, MenuItem, SelectChangeEvent, FormControl } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { RowItem, FILTERS, isTitleUnique } from './utils.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
+import Dropzone from './Dropzone.tsx';
 
 interface TableRowProps {
   key: number;
@@ -12,7 +12,7 @@ interface TableRowProps {
   row: RowItem;
 }
 
-const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
+const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
   const [selectedFilter, setSelectedFilter] = useState<string>(row.filter);
 
@@ -71,7 +71,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
         curRow === row ? { ...row, filter: newFilter } : curRow
       )
     );
-  }
+  };
 
   return (
     <MuiTableRow
@@ -174,23 +174,11 @@ const TableRow: React.FC<TableRowProps> = ({ index, row }) => {
           width: '50%'
         }}
       >
-        <Box sx={{ display: 'flex', gap: 1 }}>
-          {[...Array(8)].map((_, imgIndex) => (
-            <IconButton
-              key={imgIndex}
-              sx={{
-                width: 80,
-                height: 80,
-                border: '1px dashed grey',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <AddAPhotoIcon fontSize="small" />
-            </IconButton>
-          ))}
-        </Box>
+        <Dropzone 
+          row={row}
+          rowKey={key}
+          rowIndex={index}
+        />
       </TableCell>
       <TableCell
         sx={{

@@ -23,13 +23,13 @@ const Upload: React.FC = () => {
 
   const handleAddRow = () => {
     if (rows.length === 0) {
-      saveRows([{ title: `Listing 1`, images: [], isSelected: false, filter: '' }])
+      saveRows([{ title: `Listing 1`, files: [], isSelected: false, filter: '' }])
     } else {
       saveRows((prevRows) => [
         ...prevRows, 
         { 
           title: findUniqueTitle(prevRows), 
-          images: [], 
+          files: [], 
           isSelected: false, 
           filter: '' 
         }
@@ -75,7 +75,7 @@ const Upload: React.FC = () => {
   };
 
   const handleResetClick = () => {
-    if (rows.some(row => row.filter)) {
+    if (rows.some(row => row.filter || (row.files && row.files.some(file => file !== null)))) {
       setShowConfirmation(true);
     } else {
       resetOptions();
