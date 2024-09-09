@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import TableRowItem from './TableRowItem.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
+import { isProcessing } from './utils.tsx';
 
 const TableObject: React.FC = () => {
   const {
@@ -68,6 +69,9 @@ const TableObject: React.FC = () => {
                 <TableCell>Listing Title</TableCell>
                 <TableCell>Images</TableCell>
                 <TableCell>Filter</TableCell>
+                {isProcessing(rows) ? (
+                  <TableCell>Status</TableCell>
+                ) : <></>}
               </TableRow>
             </TableHead>
             <TableBody>

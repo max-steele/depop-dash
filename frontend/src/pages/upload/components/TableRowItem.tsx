@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { TableRow as MuiTableRow, TableCell, Box, Button, TextField, Select, MenuItem, SelectChangeEvent, FormControl } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
+import CircularProgress from '@mui/material/CircularProgress';
 import { RowItem, FILTERS, isTitleUnique } from './utils.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
 import Dropzone from './Dropzone.tsx';
@@ -207,6 +208,18 @@ const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
           </Select>
         </FormControl>
       </TableCell>
+      {row.processing ? (
+        <TableCell>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        </TableCell>
+      ) : <></>}
     </MuiTableRow>
   );
 };

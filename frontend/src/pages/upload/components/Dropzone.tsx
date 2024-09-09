@@ -24,8 +24,9 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowIndex }) => {
     (acceptedFiles) => {
       if (acceptedFiles.length) {
         const updatedImages = [...row.files];
+        const sortedFiles = [...acceptedFiles].reverse();
 
-        acceptedFiles.forEach((file) => {
+        sortedFiles.forEach((file) => {
           const indexToReplace = updatedImages.indexOf(null);
           if (indexToReplace !== -1) {
             updatedImages[indexToReplace] = Object.assign(file, {

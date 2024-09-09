@@ -23,7 +23,7 @@ const Upload: React.FC = () => {
 
   const handleAddRow = () => {
     if (rows.length === 0) {
-      saveRows([{ title: `Listing 1`, files: [], isSelected: false, filter: '' }])
+      saveRows([{ title: `Listing 1`, files: [], isSelected: false, filter: '', processing: false }])
     } else {
       saveRows((prevRows) => [
         ...prevRows, 
@@ -31,7 +31,8 @@ const Upload: React.FC = () => {
           title: findUniqueTitle(prevRows), 
           files: [], 
           isSelected: false, 
-          filter: '' 
+          filter: '', 
+          processing: false,
         }
       ]);
     }
@@ -71,7 +72,20 @@ const Upload: React.FC = () => {
   };
 
   const processDisabled = (): boolean => {
-    return rows.length === 0 || areRowsSelected() || rows.some(row => !row.filter);
+    const noRowsWithImages = !rows.some(row => row.files.some(file => file !== null));
+  
+    if (noRowsWithImages) {
+      // No images to process
+      return true;
+    }
+  
+    const allRowsWithImagesHaveFilter = rows.every(row => {
+      // If row has images, it must also have a filter
+      return !row.files.some(file => file !== null) || row.filter;
+    });
+  
+    // Return true if not all rows with images have a filter
+    return !allRowsWithImagesHaveFilter;
   };
 
   const handleResetClick = () => {
@@ -89,6 +103,14 @@ const Upload: React.FC = () => {
 
   const handleCancelReset = () => {
     setShowConfirmation(false);
+  };
+
+  const handleProcessClick = () => {
+    const updatedRows = rows
+    .filter(row => row.files.some(file => file !== null)) // Keep rows with at least one image
+    .map(row => ({ ...row, processing: true })); // Set processing status to true
+
+    saveRows(updatedRows);
   };
 
   return (
@@ -320,6 +342,7 @@ const Upload: React.FC = () => {
                     mt: 3,
                   }}
                   disabled={processDisabled()}
+                  onClick={handleProcessClick}
                 >
                   <SendIcon />
                   <Typography variant="h6" fontSize="16px" color="inherit">
