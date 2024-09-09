@@ -45,13 +45,11 @@ const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
       saveError("Listing title cannot be empty.");
     } else {
       saveRows((prevRows) => {
-        // Check if another row already has the same title
         if (!isTitleUnique(activeNewTitle, prevRows, index)) {
           saveError("Another listing already has this title.");
           return prevRows;
         }
     
-        // Update the row's title if unique
         const updatedRows = prevRows.map((curRow, rowIndex) =>
           rowIndex === index ? { ...curRow, title: activeNewTitle } : curRow
         );
@@ -176,7 +174,6 @@ const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
       >
         <Dropzone 
           row={row}
-          rowKey={key}
           rowIndex={index}
         />
       </TableCell>

@@ -1,18 +1,21 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {useDropzone} from 'react-dropzone'
 import { Box, IconButton } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { FileWithPreview, RowItem } from './utils';
 import { useUploadContext } from '../UploadContext.tsx';
+import ImagePreview from './ImagePreview.tsx';
 
 interface DropzoneProps {
   row: RowItem;
-  rowKey: number;
   rowIndex: number;
 };
 
-const Dropzone: React.FC<DropzoneProps> = ({ row, rowKey, rowIndex }) => {
+const Dropzone: React.FC<DropzoneProps> = ({ row, rowIndex }) => {
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  
   const {
     saveRows
   } = useUploadContext();
@@ -42,6 +45,11 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowKey, rowIndex }) => {
   );
   const {getRootProps, getInputProps} = useDropzone({onDrop});
 
+  useEffect(() => {
+    console.log("files length: " + row.files.length);
+    console.log(row.files);
+  }, [row]);
+
   const removeFile = (file: FileWithPreview | null) => {
     const updatedImages = row.files.map((curFile) =>
       curFile?.name === file?.name ? null : curFile
@@ -54,6 +62,21 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowKey, rowIndex }) => {
     });
   };
 
+  const handleImageClick = (index: number) => {
+    setCurrentIndex(index);
+    handleOpen();
+  };
+
+  const handleSetIndex = (newIndex: number) => {
+    setCurrentIndex(newIndex);
+  };
+
+  const handleOpen = () => setPreviewOpen(true);
+  const handleClose = () => {
+    setPreviewOpen(false);
+    setCurrentIndex(null);
+  };
+
   return (
     <Box 
       sx={{ 
@@ -62,6 +85,14 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowKey, rowIndex }) => {
         gap: 1,
       }}
     >
+      <ImagePreview
+        open={previewOpen}
+        handleClose={handleClose} 
+        images={row.files} 
+        currentIndex={currentIndex || 0}
+        setCurrentIndex={handleSetIndex} 
+      />
+
       {row.files.map((file, fileIndex) => (
         <>
           {file ? (
@@ -77,6 +108,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowKey, rowIndex }) => {
                 cursor: 'pointer',
                 overflow: 'visible',
               }}
+              onClick={() => handleImageClick(fileIndex)}
             >
               <img
                 src={file.preview}
