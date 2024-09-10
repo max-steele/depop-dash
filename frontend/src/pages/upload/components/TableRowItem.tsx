@@ -78,7 +78,6 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   };
 
   const handleDownloadClick = () => {
-    // Check if the row has files
     if (!row.files || row.files.length === 0) {
       saveError('Error: there are no files to download.');
       return;

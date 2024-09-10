@@ -10,14 +10,14 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
-import { RowItem } from './utils';
+import { FileWithPreview, RowItem } from './utils';
 
 interface ImageResultsProps {
   open: boolean;
   handleClose: () => void;
   rows: RowItem[];
-  currentIndex: number;
-  setCurrentIndex: (newIndex: number) => void;
+  rowIndex: number;
+  setRowIndex: (newIndex: number) => void;
 }
 
 const getListings = (rows: RowItem[]) => {
@@ -28,31 +28,31 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   open,
   handleClose,
   rows,
-  currentIndex,
-  setCurrentIndex,
+  rowIndex,
+  setRowIndex,
 }) => {
-  const [selectedListing, setSelectedListing] = useState<RowItem>(rows[currentIndex]);
+  const [selectedListing, setSelectedListing] = useState<RowItem>(rows[rowIndex]);
+  const [imageIndex, setImageIndex] = useState<number>(0);
 
-  const handleSelectChange = (event: SelectChangeEvent<number>) => {
-    const selectedTitle = event.target.value;
+  const images = (rows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const selectedTitle = event.target.value as string;
     const selectedRow = rows.find(row => row.title === selectedTitle);
     if (selectedRow) {
       setSelectedListing(selectedRow);
-      setCurrentIndex(rows.indexOf(selectedRow));
+      setRowIndex(rows.indexOf(selectedRow));
+      setImageIndex(0);
     }
   };
 
   const showPreviousImage = () => {
-    setCurrentIndex(currentIndex - 1);
+    setImageIndex((prev) => (prev === 0 ? images?.length - 1 : prev - 1));
   };
 
   const showNextImage = () => {
-    setCurrentIndex(currentIndex + 1);
+    setImageIndex((prev) => (prev === images?.length - 1 ? 0 : prev + 1));
   };
-
-  const images = selectedListing?.files || [];
-
-  if (images.length === 0) return null;
 
   return (
     <Dialog
@@ -109,7 +109,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             },
           }}
-          disabled={currentIndex === 0}
+          disabled={images?.length === 0 || imageIndex === 0}
         >
           <ArrowBackIcon />
         </IconButton>
@@ -117,20 +117,19 @@ const ImageResults: React.FC<ImageResultsProps> = ({
         {/* Image */}
         <Box
           component="img"
-          src={images[currentIndex]?.preview}
-          alt={`Image preview ${currentIndex + 1}`}
+          src={images[imageIndex]?.preview}
+          alt={`Image preview ${imageIndex + 1}`}
           sx={{
-            maxWidth: '80%',
-            maxHeight: '60vh',
+            maxWidth: '75%',
+            maxHeight: '75%',
             borderRadius: 2,
             boxShadow: 3,
-            marginBottom: 2,
           }}
         />
 
         {/* Select Component for Listing Titles */}
         <Select
-          value={rows.indexOf(selectedListing)}
+          value={selectedListing.title}
           onChange={handleSelectChange}
           sx={{
             minWidth: 200,
@@ -138,7 +137,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
           }}
         >
           {getListings(rows).map((listing) => (
-            <MenuItem key={listing.index} value={listing.index}>
+            <MenuItem key={listing.index} value={listing.title}>
               {listing.title}
             </MenuItem>
           ))}
@@ -156,7 +155,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             },
           }}
-          disabled={currentIndex + 1 >= images.length || images[currentIndex + 1] === null}
+          disabled={images?.length === 0 || imageIndex >= images?.length - 1}
         >
           <ArrowForwardIcon />
         </IconButton>

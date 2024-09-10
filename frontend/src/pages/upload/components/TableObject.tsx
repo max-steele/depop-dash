@@ -7,7 +7,7 @@ import ImageResults from './ImageResults.tsx';
 
 const TableObject: React.FC = () => {
   const [resultOpen, setResultOpen] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const [rowIndex, setRowIndex] = useState<number | null>(null);
 
   const {
     rows,
@@ -25,11 +25,11 @@ const TableObject: React.FC = () => {
   const handleOpen = () => setResultOpen(true);
   const handleClose = () => {
     setResultOpen(false);
-    setCurrentIndex(null);
+    setRowIndex(null);
   };
 
   const handleViewResult = (row: RowItem, index: number) => {
-    setCurrentIndex(index);
+    setRowIndex(index);
     handleOpen();
   };
 
@@ -47,8 +47,8 @@ const TableObject: React.FC = () => {
           open={resultOpen}
           handleClose={handleClose}
           rows={rows}
-          currentIndex={currentIndex || 0}
-          setCurrentIndex={setCurrentIndex}
+          rowIndex={rowIndex || 0}
+          setRowIndex={setRowIndex}
         />
         {error ? (
           <Typography 
