@@ -6,6 +6,9 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  FormControlLabel,
+  Switch,
+  Typography,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -33,8 +36,11 @@ const ImageResults: React.FC<ImageResultsProps> = ({
 }) => {
   const [selectedListing, setSelectedListing] = useState<RowItem>(rows[rowIndex]);
   const [imageIndex, setImageIndex] = useState<number>(0);
+  const [compare, setCompare] = useState<boolean>(true);
 
   const images = (rows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
+
+  const TEST_RESULT_IMAGES = images;
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
     const selectedTitle = event.target.value as string;
@@ -52,6 +58,10 @@ const ImageResults: React.FC<ImageResultsProps> = ({
 
   const showNextImage = () => {
     setImageIndex((prev) => (prev === images?.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleCompareToggle = () => {
+    setCompare(prev => !prev);
   };
 
   return (
@@ -114,18 +124,95 @@ const ImageResults: React.FC<ImageResultsProps> = ({
           <ArrowBackIcon />
         </IconButton>
 
-        {/* Image */}
+        {/* Image Display */}
         <Box
-          component="img"
-          src={images[imageIndex]?.preview}
-          alt={`Image preview ${imageIndex + 1}`}
           sx={{
-            maxWidth: '75%',
-            maxHeight: '75%',
-            borderRadius: 2,
-            boxShadow: 3,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 2,
+            width: '100%',
+            height: '80%',
           }}
-        />
+        >
+          {/* Single Image */}
+          {!compare ? (
+            <Box
+              component="img"
+              src={images[imageIndex]?.preview}
+              alt={`Image preview ${imageIndex + 1}`}
+              sx={{
+                maxWidth: '75%',
+                maxHeight: '75%',
+                borderRadius: 2,
+                boxShadow: 3,
+              }}
+            />
+          ) : (
+            <>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: '0px 30px',
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                <Box 
+                  sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center',
+                    paddingLeft: -4,
+                    mt: 15, 
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={TEST_RESULT_IMAGES[imageIndex]?.preview}
+                    alt={`Original Image ${imageIndex + 1}`}
+                    sx={{
+                      maxWidth: '80%',
+                      maxHeight: '85%',
+                      borderRadius: 2,
+                      boxShadow: 3,
+                    }}
+                  />
+                  <Typography variant="h6" fontSize="17px" color="text.secondary" sx={{ mt: 1 }}>
+                    Original
+                  </Typography>
+                </Box>
+
+                <Box 
+                  sx={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    alignItems: 'center',
+                    mt: 15,
+                  }}
+                >
+                  <Box
+                    component="img"
+                    src={images[imageIndex]?.preview}
+                    alt={`Enhanced Image ${imageIndex + 1}`}
+                    sx={{
+                      maxWidth: '80%',
+                      maxHeight: '85%',
+                      borderRadius: 2,
+                      boxShadow: 3,
+                    }}
+                  />
+                  <Typography variant="h6" fontSize="17px" color="text.secondary" sx={{ mt: 1 }}>
+                    Enhanced
+                  </Typography>
+                </Box>
+              </Box>
+            </>
+          )}
+        </Box>
 
         {/* Select Component for Listing Titles */}
         <Select
@@ -142,6 +229,18 @@ const ImageResults: React.FC<ImageResultsProps> = ({
             </MenuItem>
           ))}
         </Select>
+
+        {/* Toggle Compare Mode */}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={compare}
+              onChange={handleCompareToggle}
+            />
+          }
+          label="Compare"
+          sx={{ marginTop: 2 }}
+        />
 
         {/* Next Image Button */}
         <IconButton

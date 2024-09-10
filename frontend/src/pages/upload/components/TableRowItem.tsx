@@ -233,6 +233,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
                 borderColor: 'secondary.main', // Focus color
               },
             }}
+            disabled={row.processing === false}
           >
             {FILTERS.map((filter) => (
               <MenuItem key={filter.id} value={filter.id}>
