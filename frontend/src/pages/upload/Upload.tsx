@@ -5,7 +5,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import SendIcon from '@mui/icons-material/Send';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import DeselectIcon from '@mui/icons-material/Deselect';
-import TableObject from './components/TableObject.tsx';
+import TableObject from './components/table/TableObject.tsx';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUploadContext } from './UploadContext.tsx';

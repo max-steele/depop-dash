@@ -5,9 +5,9 @@ import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { RowItem, FILTERS, isTitleUnique } from './utils.tsx';
-import { useUploadContext } from '../UploadContext.tsx';
-import Dropzone from './Dropzone.tsx';
+import { RowItem, FILTERS, isTitleUnique } from '../utils.tsx';
+import { useUploadContext } from '../../UploadContext.tsx';
+import Dropzone from '../image/Dropzone.tsx';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 

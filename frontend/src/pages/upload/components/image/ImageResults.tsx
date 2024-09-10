@@ -13,7 +13,7 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
-import { FileWithPreview, RowItem } from './utils';
+import { FileWithPreview, RowItem } from '../utils';
 
 interface ImageResultsProps {
   open: boolean;

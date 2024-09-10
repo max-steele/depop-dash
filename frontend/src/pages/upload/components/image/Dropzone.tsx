@@ -3,8 +3,8 @@ import {useDropzone} from 'react-dropzone'
 import { Box, IconButton } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import { FileWithPreview, RowItem } from './utils';
-import { useUploadContext } from '../UploadContext.tsx';
+import { FileWithPreview, RowItem } from '../utils.tsx';
+import { useUploadContext } from '../../UploadContext.tsx';
 import ImagePreview from './ImagePreview.tsx';
 
 interface DropzoneProps {

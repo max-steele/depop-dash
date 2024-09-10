@@ -3,7 +3,7 @@ import { Box, Dialog, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
-import { FileWithPreview } from './utils';
+import { FileWithPreview } from '../utils';
 
 interface ImagePreviewProps {
   open: boolean;

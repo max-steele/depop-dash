@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import TableRowItem from './TableRowItem.tsx';
-import { useUploadContext } from '../UploadContext.tsx';
-import { isProcessing, RowItem } from './utils.tsx';
-import ImageResults from './ImageResults.tsx';
+import TableRowItem from '../table/TableRowItem.tsx';
+import { useUploadContext } from '../../UploadContext.tsx';
+import { isProcessing, RowItem } from '../utils.tsx';
+import ImageResults from '../image/ImageResults.tsx';
 
 const TableObject: React.FC = () => {
   const [resultOpen, setResultOpen] = useState<boolean>(false);
