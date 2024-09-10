@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {useDropzone} from 'react-dropzone'
 import { Box, IconButton } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
@@ -45,11 +45,6 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowIndex }) => {
     [row, rowIndex, saveRows]
   );
   const {getRootProps, getInputProps} = useDropzone({onDrop});
-
-  useEffect(() => {
-    console.log("files length: " + row.files.length);
-    console.log(row.files);
-  }, [row]);
 
   const removeFile = (file: FileWithPreview | null) => {
     const updatedImages = row.files.map((curFile) =>

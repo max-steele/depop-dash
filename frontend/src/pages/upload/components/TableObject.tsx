@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import TableRowItem from './TableRowItem.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
-import { isProcessing } from './utils.tsx';
+import { isProcessing, RowItem } from './utils.tsx';
+import ImageResults from './ImageResults.tsx';
 
 const TableObject: React.FC = () => {
+  const [resultOpen, setResultOpen] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+
   const {
     rows,
     saveRows,
@@ -18,9 +22,19 @@ const TableObject: React.FC = () => {
     );
   };
 
+  const handleOpen = () => setResultOpen(true);
+  const handleClose = () => {
+    setResultOpen(false);
+    setCurrentIndex(null);
+  };
+
+  const handleViewResult = (row: RowItem, index: number) => {
+    setCurrentIndex(index);
+    handleOpen();
+  };
+
   return (
     <>
-
       <Box
         sx={{
           display: 'flex',
@@ -29,6 +43,13 @@ const TableObject: React.FC = () => {
           maxWidth: '1600px',
         }}
       >
+        <ImageResults
+          open={resultOpen}
+          handleClose={handleClose}
+          rows={rows}
+          currentIndex={currentIndex || 0}
+          setCurrentIndex={setCurrentIndex}
+        />
         {error ? (
           <Typography 
             variant="h6" 
@@ -80,6 +101,7 @@ const TableObject: React.FC = () => {
                   key={index}
                   index={index}
                   row={row}
+                  onViewResult={(row, index) => handleViewResult(row, index)}
                 />
               ))}
             </TableBody>

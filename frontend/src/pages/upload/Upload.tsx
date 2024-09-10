@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Box, Button, FormControl, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -20,6 +20,27 @@ const Upload: React.FC = () => {
     saveRows,
     resetOptions,
   } = useUploadContext();
+
+  // TODO: add a useEffect here that, when some row's processing attribute becomes true, start a timer for 5 seconds and when the timer is up,
+  // set processing to false to simulate an API call.
+  useEffect(() => {
+    // Check if any row has processing set to true
+    const processingRow = rows.find((row) => row.processing === true);
+  
+    // If there's a row with processing set to true, start a timer
+    if (processingRow) {
+      const timer = setTimeout(() => {
+        saveRows((prevRows) =>
+          prevRows.map((row) =>
+            row.processing === true ? { ...row, processing: false } : row
+          )
+        );
+      }, 5000);
+  
+      // Cleanup the timer if the component unmounts or the effect re-runs
+      return () => clearTimeout(timer);
+    }
+  }, [rows, saveRows]);
 
   const handleAddRow = () => {
     if (rows.length === 0) {

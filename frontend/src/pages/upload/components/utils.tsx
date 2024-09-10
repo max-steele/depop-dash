@@ -3,7 +3,7 @@ export type RowItem = {
   files: (FileWithPreview | null)[]
   isSelected: boolean;
   filter: string;
-  processing: boolean;
+  processing: boolean | null;
 };
 
 export type Filter = {
@@ -21,35 +21,35 @@ export const INITIAL_LISTINGS: RowItem[] = [
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: false
+    processing: null
   },
   {
     title: 'Listing 2',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: false
+    processing: null
   },
   {
     title: 'Listing 3',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: false
+    processing: null
   },
   {
     title: 'Listing 4',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: false
+    processing: null
   },
   {
     title: 'Listing 5',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: false
+    processing: null
   },
 ];
 
@@ -81,5 +81,6 @@ export const isTitleUnique = (title: string, rows: RowItem[], index: number): bo
 };
 
 export const isProcessing = (rows: RowItem[]) => {
-  return rows.some(row => row.processing);
+  // Returns true if not null (either is being processed or has been processed)
+  return rows.some(row => row.processing != null);
 };

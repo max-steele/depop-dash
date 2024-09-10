@@ -3,17 +3,22 @@ import { TableRow as MuiTableRow, TableCell, Box, Button, TextField, Select, Men
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { RowItem, FILTERS, isTitleUnique } from './utils.tsx';
 import { useUploadContext } from '../UploadContext.tsx';
 import Dropzone from './Dropzone.tsx';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 interface TableRowProps {
   key: number;
   index: number;
   row: RowItem;
+  onViewResult: (row: RowItem, index: number) => void;
 }
 
-const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
+const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
   const [selectedFilter, setSelectedFilter] = useState<string>(row.filter);
 
@@ -70,6 +75,36 @@ const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
         curRow === row ? { ...row, filter: newFilter } : curRow
       )
     );
+  };
+
+  const handleDownloadClick = () => {
+    // Check if the row has files
+    if (!row.files || row.files.length === 0) {
+      saveError('Error: there are no files to download.');
+      return;
+    };
+
+    const zip = new JSZip();
+    const folder = zip.folder(row.title);
+
+    if (!folder) {
+      saveError('Error downloading files. Please try again later.');
+      return;
+    };
+
+    row.files.forEach((file, index) => {
+      if (file) {
+        folder.file(file.name || `file-${index}`, file);
+      }
+    });
+
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      saveAs(content, `${row.title}.zip`);
+    });
+  };
+
+  const handleViewResultClick = () => {
+    onViewResult(row, index);
   };
 
   return (
@@ -217,6 +252,41 @@ const TableRow: React.FC<TableRowProps> = ({ key, index, row }) => {
             }}
           >
             <CircularProgress />
+          </Box>
+        </TableCell>
+      ) : row.processing === false ? (
+        <TableCell>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: 1
+            }}
+          >
+            <Button
+              onClick={handleDownloadClick}
+              sx={{
+                color: 'secondary.main',
+                '&:hover': {
+                  backgroundColor: '#dfdfdf',
+                },
+              }}
+            >
+              <CloudDownloadIcon />&nbsp;Download
+            </Button>
+
+            <Button
+              onClick={handleViewResultClick}
+              sx={{
+                color: 'secondary.main',
+                '&:hover': {
+                  backgroundColor: '#dfdfdf',
+                },
+              }}
+            >
+              <RemoveRedEyeIcon />&nbsp;View Result
+            </Button>
           </Box>
         </TableCell>
       ) : <></>}
