@@ -21,8 +21,7 @@ const Upload: React.FC = () => {
     resetOptions,
   } = useUploadContext();
 
-  // TODO: add a useEffect here that, when some row's processing attribute becomes true, start a timer for 5 seconds and when the timer is up,
-  // set processing to false to simulate an API call.
+  // SIMULATE API CALL
   useEffect(() => {
     // Check if any row has processing set to true
     const processingRow = rows.find((row) => row.processing === true);

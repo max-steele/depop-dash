@@ -30,8 +30,6 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
 
   if (!images[currentIndex]) return null;
 
-  console.log("IMAGES (ImagePreview): " + JSON.stringify(images));
-
   return (
     <Dialog
       open={open}
