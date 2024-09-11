@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Typewriter from 'typewriter-effect';
 
 const MainGraphic: React.FC = () => {
     const navigate = useNavigate();
@@ -45,7 +46,17 @@ const MainGraphic: React.FC = () => {
             }}
           >
             <Typography variant="h6" fontSize="40px" color="text.secondary">
-              <b>Save time editing product photos.</b>
+              <b>
+                <Typewriter
+                  options={{
+                    strings: ['Save time editing product photos.', 'Increase sales.'],
+                    autoStart: true,
+                    loop: true,
+                    cursor: '|',
+                    delay: 50,
+                  }}
+                />
+              </b>
             </Typography>
             <Typography variant="h6" fontSize="17px" color="text.secondary">
               depop<i>Dash</i> is an AI-powered tool that allows sellers to automate editing product photos for marketplaces such as Depop.
