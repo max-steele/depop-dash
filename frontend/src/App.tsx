@@ -7,6 +7,7 @@ import AppTheme from './AppTheme.ts';
 import { Header } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
 import Upload from './pages/upload/Upload.tsx';
+import Filters from './pages/filters/Filters.tsx';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
             <Route path="*" element={<Navigate to="/home" />} />
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/filters" element={<Filters />} />
             <Route path="/upload" element={<Upload />} />
         </Routes>
         <Footer />

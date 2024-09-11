@@ -11,6 +11,10 @@ const navItems = [
     path: '/home',
   },
   {
+    label: 'Filters',
+    path: '/filters',
+  },
+  {
     label: 'Upload',
     path: '/upload',
   },
