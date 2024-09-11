@@ -47,9 +47,9 @@ const MainGraphic: React.FC = () => {
           >
             <Typography variant="h6" fontSize="40px" color="text.secondary">
               <b>
-                <Typewriter
-                  options={{
-                    strings: ['Save time editing product photos.', 'Increase sales.'],
+                  <Typewriter
+                    options={{
+                    strings: ['Save time editing product photos.'],
                     autoStart: true,
                     loop: true,
                     cursor: '|',

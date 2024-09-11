@@ -43,16 +43,25 @@ const Upload: React.FC = () => {
 
   const handleAddRow = () => {
     if (rows.length === 0) {
-      saveRows([{ title: `Listing 1`, files: [], isSelected: false, filter: '', processing: false }])
+      saveRows([
+        { 
+          title: `Listing 1`, 
+          files: Array(8).fill(null), 
+          isSelected: false, filter: '', 
+          processing: null,
+          fileProcessing: Array(8).fill(false) 
+        }
+      ])
     } else {
       saveRows((prevRows) => [
         ...prevRows, 
         { 
           title: findUniqueTitle(prevRows), 
-          files: [], 
+          files: Array(8).fill(null), 
           isSelected: false, 
           filter: '', 
-          processing: false,
+          processing: null,
+          fileProcessing: Array(8).fill(false)
         }
       ]);
     }
@@ -93,6 +102,7 @@ const Upload: React.FC = () => {
 
   const processDisabled = (): boolean => {
     const noRowsWithImages = !rows.some(row => row.files.some(file => file !== null));
+    const processingInProgress = rows.some(row => row.processing === true);
   
     if (noRowsWithImages) {
       // No images to process
@@ -105,7 +115,7 @@ const Upload: React.FC = () => {
     });
   
     // Return true if not all rows with images have a filter
-    return !allRowsWithImagesHaveFilter;
+    return !allRowsWithImagesHaveFilter || processingInProgress;
   };
 
   const handleResetClick = () => {

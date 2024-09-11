@@ -47,6 +47,7 @@ const TableObject: React.FC = () => {
           open={resultOpen}
           handleClose={handleClose}
           rows={rows}
+          saveRows={saveRows}
           rowIndex={rowIndex || 0}
           setRowIndex={setRowIndex}
         />

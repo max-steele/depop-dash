@@ -10,18 +10,20 @@ import {
   Switch,
   Typography,
   Button,
+  Divider,
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import CircularProgress from '@mui/material/CircularProgress';
-import { FileWithPreview, RowItem } from '../utils';
+import { FILTERS, FileWithPreview, RowItem } from '../utils.tsx';
 
 interface ImageResultsProps {
   open: boolean;
   handleClose: () => void;
   rows: RowItem[];
+  saveRows: (data: RowItem[] | ((prevRows: RowItem[]) => RowItem[])) => void;
   rowIndex: number;
   setRowIndex: (newIndex: number) => void;
 }
@@ -34,13 +36,13 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   open,
   handleClose,
   rows,
+  saveRows,
   rowIndex,
   setRowIndex,
 }) => {
   const [selectedListing, setSelectedListing] = useState<RowItem>(rows[rowIndex]);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [compare, setCompare] = useState<boolean>(true);
-  const [retrying, setRetrying] = useState<boolean>(false);
 
   const images = (rows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
 
@@ -68,8 +70,25 @@ const ImageResults: React.FC<ImageResultsProps> = ({
     setCompare(prev => !prev);
   };
 
+  const getFilter = (): string => {
+    const rowFilter = rows[rowIndex].filter;
+    const matchedFilter = FILTERS.find((filter) => filter.id === rowFilter);
+    return matchedFilter ? matchedFilter.name : 'Unknown Filter';
+  };
+
   const handleRetryClick = () => {
-    setRetrying(!retrying);
+    const updatedRows = [...rows];
+  updatedRows[rowIndex].fileProcessing[imageIndex] = true;
+  saveRows(updatedRows);
+  sampleAPICall();
+  };
+
+  const sampleAPICall = () => {
+    setTimeout(() => {
+      const updatedRows = [...rows];
+      updatedRows[rowIndex].fileProcessing[imageIndex] = false;
+      saveRows(updatedRows);
+    }, 5000);
   };
 
   return (
@@ -95,25 +114,46 @@ const ImageResults: React.FC<ImageResultsProps> = ({
           justifyContent: 'center',
           width: '100%',
           height: '80vh',
-          gap: 2,
+          gap: 2.5
         }}
       >
-        {/* Close Button */}
-        <IconButton
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            color: 'red',
-            backgroundColor: 'white',
-            '&:hover': {
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            },
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        {/* Header */}
+        <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxSizing: 'border-box',
+              width: '100%',
+              padding: '0 8px',
+              margin: '0 auto',
+            }}
+          >
+            <Typography variant="h6" fontSize="20px" color="text.secondary">
+              {rows[rowIndex].title}&nbsp;({getFilter()})
+            </Typography>
+            <IconButton
+              onClick={handleClose}
+              sx={{
+                color: 'red',
+                backgroundColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                },
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          {/* Divider below the Close Button */}
+          <Divider
+            sx={{
+              width: '100%',
+              borderColor: 'lightgrey',
+              borderWidth: '0.5px',
+            }}
+          />
 
         {/* Image Navigation */}
         <Box
@@ -151,8 +191,8 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  width: '80%',
-                  height: '80%',
+                  width: '90%',
+                  height: '90%',
                 }}
               >
                 <Box
@@ -176,7 +216,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                       position: 'relative',
                     }}
                   >
-                    {retrying ? (
+                    {rows[rowIndex].fileProcessing[imageIndex] ? (
                       <CircularProgress
                         sx={{
                           position: 'absolute',
@@ -201,10 +241,10 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                     onClick={handleRetryClick}
                     sx={{
                       fontSize: '14px',
-                      mt: 1,
-                      mb: 3,
+                      my: 3,
                       position: 'relative',
                     }}
+                    disabled={rows[rowIndex].fileProcessing[imageIndex]}
                   >
                     <ReplayIcon />&nbsp;Retry
                   </Button>
@@ -261,7 +301,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    mt: 4.5,
+                    mt: rows[rowIndex].fileProcessing[imageIndex] ? 4.25 : 4.5,
                     width: '50%',
                   }}
                 >
@@ -277,7 +317,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                       minHeight: 450,
                     }}
                   >
-                    {retrying ? (
+                    {rows[rowIndex].fileProcessing[imageIndex] ? (
                       <Box
                         sx={{
                           display: 'flex',
@@ -285,7 +325,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                           justifyContent: 'center',
                           width: '100%',
                           height: '100%',
-                          position: 'absolute', // Keeps CircularProgress centered
+                          position: 'absolute',
                         }}
                       >
                         <CircularProgress />
@@ -326,6 +366,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                       sx={{
                         fontSize: '14px',
                       }}
+                      disabled={rows[rowIndex].fileProcessing[imageIndex]}
                     >
                       <ReplayIcon />
                       &nbsp;Retry
@@ -353,12 +394,20 @@ const ImageResults: React.FC<ImageResultsProps> = ({
           </IconButton>
         </Box>
 
+        {/* Divider below Image Navigation */}
+        <Divider
+          sx={{
+            width: '100%',
+            borderColor: 'lightgrey',
+            borderWidth: '0.5px',
+          }}
+        />
+
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
             gap: 2,
-            mb: -5,
             alignItems: 'center'
           }}
         >

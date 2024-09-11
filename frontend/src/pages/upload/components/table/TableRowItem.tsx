@@ -146,6 +146,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
                   },
                 }}
                 onClick={handleEditTitleClick}
+                disabled={row.processing === true}
               >
                 <EditIcon fontSize="small" />
               </Button>
@@ -233,7 +234,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
                 borderColor: 'secondary.main', // Focus color
               },
             }}
-            disabled={row.processing === false}
+            disabled={row.processing === true}
           >
             {FILTERS.map((filter) => (
               <MenuItem key={filter.id} value={filter.id}>

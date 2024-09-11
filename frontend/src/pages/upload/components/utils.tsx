@@ -4,6 +4,7 @@ export type RowItem = {
   isSelected: boolean;
   filter: string;
   processing: boolean | null;
+  fileProcessing: boolean[];
 };
 
 export type Filter = {
@@ -21,35 +22,40 @@ export const INITIAL_LISTINGS: RowItem[] = [
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: null
+    processing: null,
+    fileProcessing: Array(8).fill(false)
   },
   {
     title: 'Listing 2',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: null
+    processing: null,
+    fileProcessing: Array(8).fill(false)
   },
   {
     title: 'Listing 3',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: null
+    processing: null,
+    fileProcessing: Array(8).fill(false)
   },
   {
     title: 'Listing 4',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: null
+    processing: null,
+    fileProcessing: Array(8).fill(false)
   },
   {
     title: 'Listing 5',
     files: Array(8).fill(null),
     isSelected: false,
     filter: '',
-    processing: null
+    processing: null,
+    fileProcessing: Array(8).fill(false)
   },
 ];
 

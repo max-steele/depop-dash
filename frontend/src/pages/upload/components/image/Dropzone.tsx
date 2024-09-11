@@ -127,6 +127,7 @@ const Dropzone: React.FC<DropzoneProps> = ({ row, rowIndex }) => {
                   },
                   transition: 'transform 0.2s',
                 }}
+                disabled={row.processing === true}
               >
                 <RemoveCircleIcon />
               </IconButton>
