@@ -4,7 +4,6 @@ const path = require('path');
 const cors = require('cors');
 const upload = require('./storage');
 const cloudinary = require('./cloudinary');
-import { FILTERS } from './filters.ts';
 
 const app = express();
 app.use(cors());
@@ -47,6 +46,17 @@ app.get('/api/test-images', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch images.' });
   }
 });
+
+const FILTERS = [
+  {
+    id: 'grayscale',
+    name: 'Monotone Grayscale'
+  },
+  {
+    id: 'remove_bg',
+    name: 'Remove Background'
+  }
+];
 
 // Return the names of the filters
 app.get('/api/get-filters', async (req, res) => {
