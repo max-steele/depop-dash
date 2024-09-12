@@ -39,6 +39,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   const [cleanedRows, setCleanedRows] = useState<RowItem[]>([]);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [compare, setCompare] = useState<boolean>(true);
+  const [TEST_RESULT_IMAGES, setTEST_RESULT_IMAGES] = useState<string[]>([]);
 
   const getListings = (rows: RowItem[]) => {
     return cleanedRows.map(row => ({ title: row.title, index: cleanedRows.indexOf(row) }));
@@ -46,7 +47,20 @@ const ImageResults: React.FC<ImageResultsProps> = ({
 
   const images = (cleanedRows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
 
-  const TEST_RESULT_IMAGES = images;
+  useEffect(() => {
+    const fetchTestImages = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/test-images/');
+        const data = await response.json();
+        setTEST_RESULT_IMAGES(data.images || []);
+      } catch (error) {
+        console.error('Error fetching test images:', error);
+      }
+    };
+
+    fetchTestImages();
+  }, []);
+
 
   useEffect(() => {
     // Remove null images from rows.
@@ -283,7 +297,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                 >
                   <Box
                     component="img"
-                    src={TEST_RESULT_IMAGES[imageIndex]?.preview}
+                    src={images[imageIndex]?.preview}
                     alt={`Original Image ${imageIndex + 1}`}
                     sx={{
                       maxWidth: '80%',
@@ -340,7 +354,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                     ) : (
                       <Box
                         component="img"
-                        src={images[imageIndex]?.preview}
+                        src={TEST_RESULT_IMAGES[imageIndex]}
                         alt={`Enhanced Image ${imageIndex + 1}`}
                         sx={{
                           maxWidth: '80%',

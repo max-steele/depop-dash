@@ -9,7 +9,7 @@ import { RowItem, FILTERS, isTitleUnique } from '../utils.tsx';
 import { useUploadContext } from '../../UploadContext.tsx';
 import Dropzone from '../image/Dropzone.tsx';
 import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
+import fileSaver from 'file-saver';
 
 interface TableRowProps {
   key: number;
@@ -20,7 +20,6 @@ interface TableRowProps {
 
 const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
-  //const [selectedFilter, setSelectedFilter] = useState<string>(row.currentFilter);
 
   const {
     saveRows,
@@ -30,7 +29,6 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   } = useUploadContext();
 
   useEffect(() => {
-    // TODO: save the new filter to rows obj.
     saveRows(prevRows =>
       prevRows.map((r, rIndex) =>
         rIndex === index ? { ...r, currentFilter: row.currentFilter } : r
@@ -83,28 +81,47 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
     );
   };
 
-  const handleDownloadClick = () => {
+  const handleDownloadClick = async () => {
     if (!row.files || row.files.length === 0) {
       saveError('Error: there are no files to download.');
       return;
-    };
-
+    }
+  
     const zip = new JSZip();
     const folder = zip.folder(row.title);
-
+  
     if (!folder) {
       saveError('Error downloading files. Please try again later.');
       return;
+    }
+  
+    // Function to fetch file from URL and convert it to Blob
+    const fetchFileAsBlob = async (url) => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok.');
+        return await response.blob();
+      } catch (error) {
+        console.error('Error fetching file:', error);
+        return null;
+      }
     };
-
-    row.files.forEach((file, index) => {
-      if (file) {
-        folder.file(file.name || `file-${index}`, file);
+  
+    const filePromises = row.files.map(async (file, index) => {
+      if (file && file.preview) {
+        const blob = await fetchFileAsBlob(file.preview);
+        if (blob) {
+          const fileExtension = file.path.split('.').pop();
+          const fileName = `file-${index}.${fileExtension}`;
+          folder.file(fileName, blob);
+        }
       }
     });
-
+  
+    await Promise.all(filePromises);
+  
     zip.generateAsync({ type: 'blob' }).then((content) => {
-      saveAs(content, `${row.title}.zip`);
+      fileSaver.saveAs(content, `${row.title}.zip`);
     });
   };
 

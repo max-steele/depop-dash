@@ -14,6 +14,7 @@ export type Filter = {
 }
 
 export interface FileWithPreview extends File {
+  [x: string]: any;
   preview: string;
 };
 
