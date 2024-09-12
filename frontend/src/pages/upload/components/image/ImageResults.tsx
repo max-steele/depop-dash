@@ -383,7 +383,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                       variant="h6"
                       fontSize="17px"
                       color="text.secondary"
-                      sx={{ mt: 1 }}
+                      sx={{ mt: rows[rowIndex].fileProcessing[imageIndex] ? 2 : 1 }}
                     >
                       Enhanced
                     </Typography>

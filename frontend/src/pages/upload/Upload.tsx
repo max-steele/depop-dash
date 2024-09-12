@@ -34,7 +34,9 @@ const Upload: React.FC = () => {
       }
     };
 
-    fetchFilters();
+    if (filters.length === 0) {
+      fetchFilters();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -122,16 +124,13 @@ const Upload: React.FC = () => {
 
   const processDisabled = (): boolean => {
     const noRowsWithImages = !rows.some(row => row.files.some(file => file !== null));
+    const rowsSelected = rows.some(row => row.isSelected);
     const processingInProgress = rows.some(row => row.processing === true);
   
-    if (noRowsWithImages || processingInProgress) {
+    if (noRowsWithImages || rowsSelected || processingInProgress) {
       // No images to process
       return true;
     }
-
-    console.log("HERE******************************")
-
-    console.log("ROWS: " + JSON.stringify(rows));
   
     const allRowsWithImagesHaveFilter = rows.every(row => {
       // TODO: check that if a row has images (non-null elements in row.files),

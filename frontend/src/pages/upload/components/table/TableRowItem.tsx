@@ -146,6 +146,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
       >
         <input
           type="checkbox"
+          readOnly
           checked={row.isSelected}
           onClick={handleCheckboxClick}
         />
