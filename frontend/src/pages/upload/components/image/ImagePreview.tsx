@@ -20,15 +20,17 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
   currentIndex,
   setCurrentIndex,
 }) => {
+  const cleanedImages = images.filter((image): image is FileWithPreview => image !== null);
+
   const showPreviousImage = () => {
-    setCurrentIndex(currentIndex - 1);
+    setCurrentIndex(currentIndex === 0 ? cleanedImages?.length - 1 : currentIndex - 1);
   };
 
   const showNextImage = () => {
-    setCurrentIndex(currentIndex + 1);
+    setCurrentIndex(currentIndex === cleanedImages?.length - 1 ? 0 : currentIndex + 1);
   };
 
-  if (!images[currentIndex]) return null;
+  if (!cleanedImages[currentIndex]) return null;
 
   return (
     <Dialog
@@ -83,7 +85,6 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             },
           }}
-          disabled={currentIndex === 0}
         >
           <ArrowBackIcon />
         </IconButton>
@@ -99,9 +100,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
             '&:hover': {
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
             },
-            pointerEvents: (currentIndex + 1 >= images.length || images[currentIndex + 1] === null) ? 'none' : 'auto',
           }}
-          disabled={currentIndex + 1 >= images.length || images[currentIndex + 1] === null}
         >
           <ArrowForwardIcon />
         </IconButton>
@@ -109,7 +108,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({
         {/* Image */}
         <Box
           component="img"
-          src={images[currentIndex]?.preview}
+          src={cleanedImages[currentIndex]?.preview}
           alt={`Image preview ${currentIndex + 1}`}
           sx={{
             maxWidth: '90%',

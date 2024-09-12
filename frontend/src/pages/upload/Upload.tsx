@@ -47,7 +47,9 @@ const Upload: React.FC = () => {
         { 
           title: `Listing 1`, 
           files: Array(8).fill(null), 
-          isSelected: false, filter: '', 
+          isSelected: false, 
+          currentFilter: '',
+          appliedFilter: null, 
           processing: null,
           fileProcessing: Array(8).fill(false) 
         }
@@ -59,7 +61,8 @@ const Upload: React.FC = () => {
           title: findUniqueTitle(prevRows), 
           files: Array(8).fill(null), 
           isSelected: false, 
-          filter: '', 
+          currentFilter: '',
+          appliedFilter: null, 
           processing: null,
           fileProcessing: Array(8).fill(false)
         }
@@ -104,14 +107,19 @@ const Upload: React.FC = () => {
     const noRowsWithImages = !rows.some(row => row.files.some(file => file !== null));
     const processingInProgress = rows.some(row => row.processing === true);
   
-    if (noRowsWithImages) {
+    if (noRowsWithImages || processingInProgress) {
       // No images to process
       return true;
     }
+
+    console.log("HERE******************************")
+
+    console.log("ROWS: " + JSON.stringify(rows));
   
     const allRowsWithImagesHaveFilter = rows.every(row => {
-      // If row has images, it must also have a filter
-      return !row.files.some(file => file !== null) || row.filter;
+      // TODO: check that if a row has images (non-null elements in row.files),
+      // then it has a filter (row.currentFilter)
+      return row.files.some(file => file !== null) ? Boolean(row.currentFilter) : true;
     });
   
     // Return true if not all rows with images have a filter
@@ -119,7 +127,7 @@ const Upload: React.FC = () => {
   };
 
   const handleResetClick = () => {
-    if (rows.some(row => row.filter || (row.files && row.files.some(file => file !== null)))) {
+    if (rows.some(row => row.currentFilter || (row.files && row.files.some(file => file !== null)))) {
       setShowConfirmation(true);
     } else {
       resetOptions();
@@ -137,8 +145,12 @@ const Upload: React.FC = () => {
 
   const handleProcessClick = () => {
     const updatedRows = rows
-    .filter(row => row.files.some(file => file !== null)) // Keep rows with at least one image
-    .map(row => ({ ...row, processing: true })); // Set processing status to true
+      .filter(row => row.files.some(file => file !== null)) // Keep rows with at least one image
+      .map(row => ({
+        ...row,
+        appliedFilter: row.currentFilter, // Set appliedFilter to currentFilter
+        processing: true, // Set processing status to true
+      }));
 
     saveRows(updatedRows);
   };

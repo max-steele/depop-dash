@@ -2,7 +2,8 @@ export type RowItem = {
   title: string;
   files: (FileWithPreview | null)[]
   isSelected: boolean;
-  filter: string;
+  currentFilter: string;
+  appliedFilter: string | null;
   processing: boolean | null;
   fileProcessing: boolean[];
 };
@@ -21,7 +22,8 @@ export const INITIAL_LISTINGS: RowItem[] = [
     title: 'Listing 1',
     files: Array(8).fill(null),
     isSelected: false,
-    filter: '',
+    currentFilter: '',
+    appliedFilter: null,
     processing: null,
     fileProcessing: Array(8).fill(false)
   },
@@ -29,7 +31,8 @@ export const INITIAL_LISTINGS: RowItem[] = [
     title: 'Listing 2',
     files: Array(8).fill(null),
     isSelected: false,
-    filter: '',
+    currentFilter: '',
+    appliedFilter: null,
     processing: null,
     fileProcessing: Array(8).fill(false)
   },
@@ -37,7 +40,8 @@ export const INITIAL_LISTINGS: RowItem[] = [
     title: 'Listing 3',
     files: Array(8).fill(null),
     isSelected: false,
-    filter: '',
+    currentFilter: '',
+    appliedFilter: null,
     processing: null,
     fileProcessing: Array(8).fill(false)
   },
@@ -45,7 +49,8 @@ export const INITIAL_LISTINGS: RowItem[] = [
     title: 'Listing 4',
     files: Array(8).fill(null),
     isSelected: false,
-    filter: '',
+    currentFilter: '',
+    appliedFilter: null,
     processing: null,
     fileProcessing: Array(8).fill(false)
   },
@@ -53,7 +58,8 @@ export const INITIAL_LISTINGS: RowItem[] = [
     title: 'Listing 5',
     files: Array(8).fill(null),
     isSelected: false,
-    filter: '',
+    currentFilter: '',
+    appliedFilter: null,
     processing: null,
     fileProcessing: Array(8).fill(false)
   },
@@ -71,7 +77,7 @@ export const FILTERS: Filter[] = [
 ];
 
 export const calculateSelectedFilter = (rows: RowItem[]): string => {
-  const uniqueFilters = new Set(rows.filter(row => row.isSelected).map(row => row.filter));
+  const uniqueFilters = new Set(rows.filter(row => row.isSelected).map(row => row.currentFilter));
   return uniqueFilters.size === 1 ? [...uniqueFilters][0] : '';
 };
 

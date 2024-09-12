@@ -20,7 +20,7 @@ interface TableRowProps {
 
 const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
-  const [selectedFilter, setSelectedFilter] = useState<string>(row.filter);
+  //const [selectedFilter, setSelectedFilter] = useState<string>(row.currentFilter);
 
   const {
     saveRows,
@@ -30,8 +30,14 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   } = useUploadContext();
 
   useEffect(() => {
-    setSelectedFilter(row.filter);
-  }, [row.filter]);
+    // TODO: save the new filter to rows obj.
+    saveRows(prevRows =>
+      prevRows.map((r, rIndex) =>
+        rIndex === index ? { ...r, currentFilter: row.currentFilter } : r
+      )
+    );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row.currentFilter]);
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -69,10 +75,10 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
 
   const handleFilterChange = (event: SelectChangeEvent<string>, child: ReactNode) => {
     const newFilter = event?.target.value as string;
-    setSelectedFilter(newFilter);
+    //setSelectedFilter(newFilter);
     saveRows((prevRows) =>
       prevRows.map((curRow) =>
-        curRow === row ? { ...row, filter: newFilter } : curRow
+        curRow === row ? { ...row, currentFilter: newFilter } : curRow
       )
     );
   };
@@ -146,7 +152,6 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
                   },
                 }}
                 onClick={handleEditTitleClick}
-                disabled={row.processing === true}
               >
                 <EditIcon fontSize="small" />
               </Button>
@@ -220,7 +225,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
       >
         <FormControl fullWidth>
           <Select
-            value={selectedFilter}
+            value={row.currentFilter}
             onChange={handleFilterChange}
             sx={{
               minWidth: 120,

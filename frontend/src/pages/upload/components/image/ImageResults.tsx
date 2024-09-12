@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Dialog,
@@ -28,10 +28,6 @@ interface ImageResultsProps {
   setRowIndex: (newIndex: number) => void;
 }
 
-const getListings = (rows: RowItem[]) => {
-  return rows.map(row => ({ title: row.title, index: rows.indexOf(row) }));
-};
-
 const ImageResults: React.FC<ImageResultsProps> = ({
   open,
   handleClose,
@@ -40,19 +36,31 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   rowIndex,
   setRowIndex,
 }) => {
-  const [selectedListing, setSelectedListing] = useState<RowItem>(rows[rowIndex]);
+  const [cleanedRows, setCleanedRows] = useState<RowItem[]>([]);
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [compare, setCompare] = useState<boolean>(true);
 
-  const images = (rows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
+  const getListings = (rows: RowItem[]) => {
+    return cleanedRows.map(row => ({ title: row.title, index: cleanedRows.indexOf(row) }));
+  };
+
+  const images = (cleanedRows[rowIndex]?.files || []).filter((file): file is FileWithPreview => file !== null);
 
   const TEST_RESULT_IMAGES = images;
+
+  useEffect(() => {
+    // Remove null images from rows.
+    const cleaned = rows.map((row) => ({
+      ...row,
+      files: row.files.filter((file) => file !== null),
+    }));
+    setCleanedRows(cleaned);
+  }, [rows]);
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
     const selectedTitle = event.target.value as string;
     const selectedRow = rows.find(row => row.title === selectedTitle);
     if (selectedRow) {
-      setSelectedListing(selectedRow);
       setRowIndex(rows.indexOf(selectedRow));
       setImageIndex(0);
     }
@@ -71,16 +79,16 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   };
 
   const getFilter = (): string => {
-    const rowFilter = rows[rowIndex].filter;
+    const rowFilter = rows[rowIndex].appliedFilter;
     const matchedFilter = FILTERS.find((filter) => filter.id === rowFilter);
     return matchedFilter ? matchedFilter.name : 'Unknown Filter';
   };
 
   const handleRetryClick = () => {
     const updatedRows = [...rows];
-  updatedRows[rowIndex].fileProcessing[imageIndex] = true;
-  saveRows(updatedRows);
-  sampleAPICall();
+    updatedRows[rowIndex].fileProcessing[imageIndex] = true;
+    saveRows(updatedRows);
+    sampleAPICall();
   };
 
   const sampleAPICall = () => {
@@ -179,7 +187,6 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
               },
             }}
-            disabled={images?.length === 0 || imageIndex === 0}
           >
             <ArrowBackIcon />
           </IconButton>
@@ -388,7 +395,6 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
               },
             }}
-            disabled={images?.length === 0 || imageIndex >= images?.length - 1}
           >
             <ArrowForwardIcon />
           </IconButton>
@@ -413,7 +419,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
         >
           {/* Select Component for Listing Titles */}
           <Select
-            value={selectedListing.title}
+            value={rows[rowIndex].title}
             onChange={handleSelectChange}
             sx={{
               minWidth: 200,
