@@ -69,8 +69,10 @@ const Filter1: React.FC = () => {
         <Box
           sx={{
             height: '850px',
+            width: '1600px',
             display: 'flex',
             justifyContent: 'center',
+            margin: '0 auto',
             textAlign: 'left',
             padding: '0 100px 0 100px',
             gap: 3,
