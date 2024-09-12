@@ -9,17 +9,34 @@ import TableObject from './components/table/TableObject.tsx';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { useUploadContext } from './UploadContext.tsx';
-import { calculateSelectedFilter, FILTERS, isTitleUnique, RowItem } from './components/utils.tsx';
+import { calculateSelectedFilter, isTitleUnique, RowItem } from './components/utils.tsx';
 
 
 const Upload: React.FC = () => {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   
   const {
+    filters,
+    saveFilters,
     rows,
     saveRows,
     resetOptions,
   } = useUploadContext();
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/get-filters/');
+        const data = await response.json();
+        saveFilters(data.filters);
+      } catch (error) {
+        console.error('Error fetching test images:', error);
+      }
+    };
+
+    fetchFilters();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // SIMULATE API CALL
   useEffect(() => {
@@ -413,8 +430,8 @@ const Upload: React.FC = () => {
                         mt: 3
                       }}
                     >
-                      {FILTERS.map((filter) => (
-                        <MenuItem key={filter.id} value={filter.id}>
+                      {filters.map((filter) => (
+                        <MenuItem key={filter.id} value={filter.name}>
                           {filter.name}
                         </MenuItem>
                       ))}

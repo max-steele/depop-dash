@@ -17,7 +17,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CloseIcon from '@mui/icons-material/Close';
 import ReplayIcon from '@mui/icons-material/Replay';
 import CircularProgress from '@mui/material/CircularProgress';
-import { FILTERS, FileWithPreview, RowItem } from '../utils.tsx';
+import { FileWithPreview, RowItem } from '../utils.tsx';
+import { useUploadContext } from '../../UploadContext.tsx';
 
 interface ImageResultsProps {
   open: boolean;
@@ -40,6 +41,10 @@ const ImageResults: React.FC<ImageResultsProps> = ({
   const [imageIndex, setImageIndex] = useState<number>(0);
   const [compare, setCompare] = useState<boolean>(true);
   const [TEST_RESULT_IMAGES, setTEST_RESULT_IMAGES] = useState<string[]>([]);
+
+  const {
+    filters
+  } = useUploadContext();
 
   const getListings = (rows: RowItem[]) => {
     return cleanedRows.map(row => ({ title: row.title, index: cleanedRows.indexOf(row) }));
@@ -94,7 +99,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
 
   const getFilter = (): string => {
     const rowFilter = rows[rowIndex].appliedFilter;
-    const matchedFilter = FILTERS.find((filter) => filter.id === rowFilter);
+    const matchedFilter = filters.find((filter) => filter.name === rowFilter);
     return matchedFilter ? matchedFilter.name : 'Unknown Filter';
   };
 
@@ -206,7 +211,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
           </IconButton>
           {!compare ? (
             <>
-              {/* Single Image */}
+              {/* Single Image (Enhanced) */}
               <Box
                 sx={{
                   display: 'flex',
@@ -246,7 +251,7 @@ const ImageResults: React.FC<ImageResultsProps> = ({
                     ) : (
                       <Box
                         component="img"
-                        src={images[imageIndex]?.preview}
+                        src={TEST_RESULT_IMAGES[imageIndex]}
                         alt={`Image preview ${imageIndex + 1}`}
                         sx={{
                           maxWidth: '100%',

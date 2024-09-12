@@ -5,7 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { RowItem, FILTERS, isTitleUnique } from '../utils.tsx';
+import { RowItem, isTitleUnique } from '../utils.tsx';
 import { useUploadContext } from '../../UploadContext.tsx';
 import Dropzone from '../image/Dropzone.tsx';
 import JSZip from 'jszip';
@@ -22,6 +22,7 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
   const [activeNewTitle, setActiveNewTitle] = useState<string>(row.title);
 
   const {
+    filters,
     saveRows,
     saveError,
     editName,
@@ -258,8 +259,8 @@ const TableRow: React.FC<TableRowProps> = ({ index, row, onViewResult }) => {
             }}
             disabled={row.processing === true}
           >
-            {FILTERS.map((filter) => (
-              <MenuItem key={filter.id} value={filter.id}>
+            {filters.map((filter) => (
+              <MenuItem key={filter.id} value={filter.name}>
                 {filter.name}
               </MenuItem>
             ))}

@@ -66,17 +66,6 @@ export const INITIAL_LISTINGS: RowItem[] = [
   },
 ];
 
-export const FILTERS: Filter[] = [
-  {
-    id: 'grayscale',
-    name: 'Monotone Grayscale'
-  },
-  {
-    id: 'remove_bg',
-    name: 'Remove Background'
-  }
-];
-
 export const calculateSelectedFilter = (rows: RowItem[]): string => {
   const uniqueFilters = new Set(rows.filter(row => row.isSelected).map(row => row.currentFilter));
   return uniqueFilters.size === 1 ? [...uniqueFilters][0] : '';

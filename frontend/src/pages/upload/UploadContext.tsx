@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { INITIAL_LISTINGS, RowItem } from './components/utils.tsx';
+import { Filter, INITIAL_LISTINGS, RowItem } from './components/utils.tsx';
 
 interface UploadContextProps {
+  filters: Filter[];
+  saveFilters: (data: Filter[]) => void;
   rows: RowItem[];
   saveRows: (data: RowItem[] | ((prevRows: RowItem[]) => RowItem[])) => void;
   error: string;
@@ -25,9 +27,14 @@ const useUploadContext = (): UploadContextProps => {
 };
 
 const UploadContextProvider = ({ children }: any) => {
+  const [filters, setFilters] = useState<Filter[]>([]);
   const [rows, setRows] = useState<RowItem[]>(INITIAL_LISTINGS);
   const [error, setError] = useState<string>('');
   const [editName, setEditName] = useState<number | null>(null);
+
+  const saveFilters = (data: Filter[]) => {
+    setFilters(data);
+  }
 
   const saveRows = (updater: RowItem[] | ((prevRows: RowItem[]) => RowItem[])) => {
     if (typeof updater === 'function') {
@@ -52,6 +59,8 @@ const UploadContextProvider = ({ children }: any) => {
   };
 
   const value: UploadContextProps = {
+    filters,
+    saveFilters,
     rows,
     saveRows,
     error,
